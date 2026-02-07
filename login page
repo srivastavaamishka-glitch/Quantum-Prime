@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Prime | Artha Twin Access</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="input.css">
+</head>
 <body>
     <div class="main-container">
         <div class="brand-section">
@@ -8,10 +18,12 @@
                 <div class="ring ring-3"></div>
                 <div class="ring ring-4"></div>
             </div>
+            
             <div class="logo-container">
                 <i class="fa-solid fa-infinity logo-icon"></i>
                 <h2>QUANTUM PRIME</h2>
             </div>
+            
             <div class="hero-content">
                 <div class="hero-text">
                     <h1>ARTHA TWIN</h1>
@@ -21,16 +33,18 @@
                         <span id="typing-text"></span><span class="cursor">|</span>
                     </div>
                 </div>
+                
                 <div class="feature-pills">
                     <div class="pill"><i class="fa-solid fa-chart-line"></i> 10-Year Projection</div>
                     <div class="pill"><i class="fa-solid fa-bolt"></i> Chaos Engine</div>
-                    <div class="pill"><i class="fa-solid fa-robot"></i> AI Assistance</div>
+                    <div class="pill"><i class="fa-solid fa-robot"></i> 24/7 AI Assistance</div>
                 </div>
             </div>
         </div>
-
+        
         <div class="form-section">
-            <div class="login-card">
+            
+            <div id="login-view" class="card login-card">
                 <h3>Welcome</h3>
                 <p class="form-instruction">Access your digital financial twin.</p>
                 <form id="loginForm">
@@ -50,20 +64,130 @@
                     </div>
                     <div class="actions">
                         <label class="checkbox-container">
-                            <input type="checkbox" checked> <span class="checkmark"></span> Remember Data
+                            <input type="checkbox" checked>
+                            <span class="checkmark"></span>
+                            Remember Twin Data
                         </label>
                         <a href="#" class="forgot-pass">Reset Key?</a>
                     </div>
-                    <button type="submit" class="btn-primary">INITIALIZE SIMULATION <i class="fa-solid fa-arrow-right-long"></i></button>
+                    <button type="submit" class="btn-primary">
+                        INITIALIZE SIMULATION <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
                     <div class="divider"><span>OR CONNECT VIA</span></div>
                     <div class="social-login">
                         <button type="button" class="btn-social google"><i class="fa-brands fa-google"></i></button>
                         <button type="button" class="btn-social linkedin"><i class="fa-brands fa-linkedin-in"></i></button>
                     </div>
-                    <p class="signup-link">New? <a href="#">Create Logic Profile</a></p>
+                    <p class="signup-link">New to Artha Twin? <a href="#">Create Logic Profile</a></p>
+                </form>
+            </div>
+
+            <div id="simulator-view" class="card simulator-card">
+                <h3>Build Your Twin</h3>
+                <p class="form-instruction">Feed the algorithm. We'll do the rest.</p>
+                
+                <form id="simForm">
+                    
+                    <div class="section-title">The Basics</div>
+                    <div class="sim-grid">
+                        <div class="input-group">
+                            <label>Current Age</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-cake-candles"></i>
+                                <input type="number" placeholder="24" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Est. Inflation (%)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <input type="number" placeholder="6.0" value="6.0" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Monthly Cash Flow</div>
+                    <div class="sim-grid">
+                        <div class="input-group">
+                            <label>Income (Post-Tax)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-indian-rupee-sign"></i>
+                                <input type="number" placeholder="85000" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Monthly Expenses</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-wallet"></i>
+                                <input type="number" placeholder="35000" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Current Liquid Savings</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-vault"></i>
+                            <input type="number" placeholder="250000" required>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Investments</div>
+                    <div class="sim-grid">
+                        <div class="input-group">
+                            <label>SIP (Monthly)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-chart-pie"></i>
+                                <input type="number" placeholder="10000">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Stocks Portfolio</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-arrow-up-right-dots"></i>
+                                <input type="number" placeholder="50000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Fixed Deposits (FD)</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-landmark"></i>
+                            <input type="number" placeholder="100000">
+                        </div>
+                    </div>
+
+                    <div class="section-title">Goals (Target Cost)</div>
+                    <div class="sim-grid">
+                        <div class="input-group">
+                            <label>House</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-house"></i>
+                                <input type="number" placeholder="8000000">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Car</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-car"></i>
+                                <input type="number" placeholder="1500000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Marriage / Event</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-rings-wedding"></i>
+                            <input type="number" placeholder="2000000">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="margin-top: 20px;">
+                        GENERATE FINANCIAL TWIN <i class="fa-solid fa-dna"></i>
+                    </button>
                 </form>
             </div>
         </div>
     </div>
-    <script src="login.js"></script>
+    <script src="input.js"></script>
 </body>
+</html>

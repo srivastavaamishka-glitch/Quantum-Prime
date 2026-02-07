@@ -80,4 +80,22 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
     const btn = document.getElementById('submitBtn');
     btn.innerHTML = "ESTABLISHING MIRROR...";
     btn.classList.add('opacity-50');
+    const wipe = document.createElement('div');
+            wipe.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 2px; height: 100%;
+                background: var(--accent-teal); box-shadow: 0 0 40px var(--accent-teal);
+                z-index: 100; pointer-events: none;
+            `;
+            document.body.appendChild(wipe);
+
+            gsap.to(wipe, {
+                width: "100%",
+                left: "100%",
+                duration: 1.5,
+                ease: "power4.inOut",
+                onComplete: () => {
+                    btn.innerHTML = "SYNC COMPLETE";
+                    gsap.to(wipe, { opacity: 0, duration: 0.5 });
+                }
+            });
 });

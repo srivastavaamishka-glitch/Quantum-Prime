@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap');
+
+:root {
+    --bg-dark: #050505; --card-bg: #0a0a0a; --neon-prime: #FF6B00;
+    --text-main: #ffffff; --text-muted: #888888; --border-color: #222222;
+    --neon-glow: rgba(255, 107, 0, 0.35);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--bg-dark); color: var(--text-main); font-family: 'Inter', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+.main-container { display: flex; width: 100%; height: 100%; }
+
+/* Left Side Styling */
+.brand-section {
+    flex: 1; background: radial-gradient(circle at center, #1a0a05 0%, var(--bg-dark) 70%);
+    display: flex; flex-direction: column; justify-content: center; padding: 80px; position: relative;
+    border-right: 1px solid var(--border-color); perspective: 1000px;
+}
+.orbital-system { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 800px; pointer-events: none; }
+.ring { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border-radius: 50%; border: 1px solid rgba(255, 107, 0, 0.15); }
+.ring-1 { width: 600px; height: 600px; } .ring-2 { width: 450px; height: 450px; border-style: dashed; }
+.ring-3 { width: 300px; height: 300px; } .ring-4 { width: 800px; height: 800px; opacity: 0.3; }
+.core-glow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: var(--neon-prime); box-shadow: 0 0 100px 40px rgba(255, 107, 0, 0.15); }
+
+.logo-container { position: absolute; top: 40px; left: 40px; display: flex; gap: 10px; color: var(--neon-prime); align-items: center; }
+.hero-text h1 { font-size: 5rem; background: linear-gradient(135deg, #fff, var(--neon-prime)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.pill { background: rgba(255, 255, 255, 0.03); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--border-color); color: var(--neon-prime); display: flex; gap: 8px; margin-right: 10px; margin-top: 20px; float: left; }
+
+/* Right Side Styling */
+.form-section { flex: 0.8; display: flex; align-items: center; justify-content: center; background: var(--bg-dark); z-index: 10; }
+.login-card { width: 400px; padding: 40px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; }
+.login-card h3 { font-size: 2rem; color: white; margin-bottom: 10px; }
+.input-group { margin-bottom: 20px; }
+.input-wrapper { position: relative; }
+.input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
+input { width: 100%; background: #000; border: 1px solid var(--border-color); padding: 14px 15px 14px 45px; border-radius: 8px; color: white; outline: none; transition: 0.3s; }
+input:focus { border-color: var(--neon-prime); box-shadow: 0 0 15px var(--neon-glow); }
+
+.btn-primary { width: 100%; background: var(--neon-prime); padding: 16px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+.btn-primary:hover { background: #ffaa55; box-shadow: 0 0 30px var(--neon-glow); }
+.actions { display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 0.9rem; color: var(--text-muted); }
+.divider { text-align: center; margin: 25px 0; position: relative; }
+.divider::before { content: ''; position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background: var(--border-color); }
+.divider span { background: var(--card-bg); position: relative; padding: 0 10px; z-index: 2; font-size: 0.8rem; }
+.social-login { display: flex; gap: 15px; margin-bottom: 25px; }
+.btn-social { flex: 1; padding: 12px; background: transparent; border: 1px solid var(--border-color); color: white; cursor: pointer; font-size: 1.2rem; }
+.signup-link { text-align: center; font-size: 0.9rem; color: var(--text-muted); }
+.signup-link a { color: var(--neon-prime); text-decoration: none; }
+@media (max-width: 900px) { .brand-section { display: none; } .form-section { height: 100vh; } .login-card { width: 100%; } }

@@ -1,38 +1,102 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Setup Animations
+    
+    // --- GSAP SETUP ---
     const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-    tl.from(".logo-container", { y: -20, opacity: 0, duration: 1 })
-      .from(".hero-text h1", { y: 30, opacity: 0, duration: 0.8 }, "-=0.5")
-      .from(".login-card", { x: 50, opacity: 0, duration: 1 }, "-=0.5");
 
-    // 2. Infinite Ring Rotation
+    // Initial Entrances
+    tl.to(".logo-container", { y: 0, opacity: 1, duration: 1 })
+      .to(".hero-content", { opacity: 1, duration: 1 }, "-=0.5")
+      .from(".hero-text h1", { y: 30, opacity: 0, duration: 0.8 }, "-=0.8")
+      .from(".subtitle", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
+      .from(".typing-container", { y: 20, opacity: 0, duration: 0.8 }, "-=0.6")
+      .to(".pill", { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 }, "-=0.4")
+      .to(".login-card", { x: 0, opacity: 1, duration: 1 }, "-=1");
+
+    // Ambient Animations
+    gsap.to(".pill", { y: -10, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", stagger: { each: 0.3, from: "random" } });
+    
+    // Ring Animations
     gsap.to(".ring-1", { rotationX: 360, rotationY: 180, duration: 20, repeat: -1, ease: "none" });
     gsap.to(".ring-2", { rotationX: -360, rotationZ: 100, duration: 25, repeat: -1, ease: "none" });
-    gsap.to(".ring-3", { rotationY: 360, duration: 30, repeat: -1, ease: "none" });
-    gsap.to(".ring-4", { rotationZ: -360, duration: 40, repeat: -1, ease: "none" });
+    gsap.to(".ring-3", { rotationY: 360, rotationZ: -45, duration: 15, repeat: -1, ease: "none" });
+    gsap.to(".ring-4", { rotationZ: 360, duration: 60, repeat: -1, ease: "none" });
+    
+    // Mouse Parallax
+    document.querySelector('.brand-section').addEventListener('mousemove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 20;
+        const y = (e.clientY / window.innerHeight - 0.5) * 20;
+        gsap.to(".orbital-system", { rotationY: x, rotationX: -y, duration: 1, ease: "power2.out" });
+    });
 
-    // 3. Typing Effect
-    const textEl = document.getElementById('typing-text');
-    const words = ["PREDICT", "PLAN", "GROW", "SECURE"];
-    let [wIdx, cIdx, isDel] = [0, 0, false];
-    const type = () => {
-        const current = words[wIdx];
-        if (isDel) cIdx--; else cIdx++;
-        textEl.textContent = current.substring(0, cIdx);
-        let speed = isDel ? 50 : 150;
-        if (!isDel && cIdx === current.length) { isDel = true; speed = 1500; }
-        else if (isDel && cIdx === 0) { isDel = false; wIdx = (wIdx + 1) % words.length; speed = 500; }
-        setTimeout(type, speed);
-    };
-    type();
+    // --- TYPING LOGIC ---
+    const textElement = document.getElementById('typing-text');
+    const words = ["PREDICT", "PLAN", "GROW", "SECURE", "PROSPER"];
+    let wordIndex = 0; let charIndex = 0; let isDeleting = false; let typeSpeed = 100;
+    function typeEffect() {
+        const currentWord = words[wordIndex];
+        if (isDeleting) { textElement.textContent = currentWord.substring(0, charIndex - 1); charIndex--; typeSpeed = 50; } 
+        else { textElement.textContent = currentWord.substring(0, charIndex + 1); charIndex++; typeSpeed = 150; }
+        if (!isDeleting && charIndex === currentWord.length) { isDeleting = true; typeSpeed = 1500; } 
+        else if (isDeleting && charIndex === 0) { isDeleting = false; wordIndex = (wordIndex + 1) % words.length; typeSpeed = 500; }
+        setTimeout(typeEffect, typeSpeed);
+    }
+    typeEffect();
 
-    // 4. Form Submit Logic
-    document.getElementById('loginForm').addEventListener('submit', (e) => {
+    // --- NAVIGATION LOGIC ---
+    const loginForm = document.getElementById('loginForm');
+    const simForm = document.getElementById('simForm');
+    const loginView = document.getElementById('login-view');
+    const simView = document.getElementById('simulator-view');
+
+    // 1. Login -> Simulator
+    loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const btn = document.querySelector('.btn-primary');
-        const orgText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> PROCESSING...';
-        gsap.to(btn, { x: [-5, 5, -5, 5, 0], duration: 0.4 });
-        setTimeout(() => { alert("Backend Connected! Redirecting..."); btn.innerHTML = orgText; }, 2000);
+        const btn = loginForm.querySelector('.btn-primary');
+        const originalText = btn.innerHTML;
+        
+        // Loading state
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> VERIFYING...';
+        btn.style.opacity = '0.8';
+
+        setTimeout(() => {
+            // Transition Animation
+            gsap.to(loginView, {
+                opacity: 0,
+                y: -20,
+                duration: 0.5,
+                onComplete: () => {
+                    loginView.style.display = 'none';
+                    simView.style.display = 'block';
+                    
+                    // Animate Simulator IN
+                    gsap.fromTo(simView, 
+                        { opacity: 0, y: 30, scale: 0.95 }, 
+                        { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.7)" }
+                    );
+                }
+            });
+        }, 1000);
+    });
+
+    // 2. Simulator Submit
+    simForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = simForm.querySelector('.btn-primary');
+        
+        // Loading state
+        btn.innerHTML = '<i class="fa-solid fa-microchip fa-spin"></i> CRUNCHING NUMBERS...';
+        gsap.to(btn, { x: [-2, 2, -2, 2, 0], duration: 0.3 });
+
+        setTimeout(() => {
+            alert("Data ingested successfully! Launching Dashboard...");
+            // Here you would redirect to the main dashboard
+        }, 2000);
+    });
+    
+    // Input Focus Effects
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+        input.addEventListener('focus', () => { input.parentElement.querySelector('i').style.color = '#FF6B00'; });
+        input.addEventListener('blur', () => { if(input.value === '') { input.parentElement.querySelector('i').style.color = '#888888'; } });
     });
 });

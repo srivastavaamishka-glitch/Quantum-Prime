@@ -64,3 +64,40 @@ document.getElementById('loginForm').addEventListener('submit', (e) => {
             gsap.from("#setup-view .glass-panel", { y: 30, opacity: 0, duration: 1, delay: 0.4 });
     });
 });
+// --- SETUP FORM LOGIC ---
+let currentStep = 1;
+const totalSteps = 5;
+function updateUI() {
+    const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    document.querySelector('.step-active-line').style.width = `${progress}%`;
+    document.querySelectorAll('.step-dot').forEach(dot => {
+        const step = parseInt(dot.dataset.step);
+        dot.classList.remove('active', 'completed');
+        if (step === currentStep) dot.classList.add('active');
+        if (step < currentStep) dot.classList.add('completed');
+        const label = dot.nextElementSibling;
+        label.classList.toggle('text-teal-400', step <= currentStep);
+        label.classList.toggle('text-slate-500', step > currentStep);
+    });
+    for (let i = 1; i <= totalSteps; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (i === currentStep) {
+            el.classList.remove('hidden');
+            el.classList.add('block'); // ensure visibility
+            // Simple animation
+            gsap.fromTo(el, { opacity: 0, x: 20 }, { opacity: 1, x: 0, duration: 0.5 });
+        } else {
+            el.classList.add('hidden');
+            el.classList.remove('block');
+        }
+    }
+    document.getElementById('prevBtn').classList.toggle('hidden', currentStep === 1);
+    
+    // Toggle Next/Generate button based on last step
+    if (currentStep === totalSteps) { 
+        document.getElementById('nav-btns').style.display = 'none'; 
+    } else { 
+        document.getElementById('nav-btns').style.display = 'flex'; 
+    }
+}
+

@@ -100,4 +100,135 @@ function updateUI() {
         document.getElementById('nav-btns').style.display = 'flex'; 
     }
 }
+// Ensure initial state
+updateUI();
+
+document.getElementById('nextBtn').addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; updateUI(); } });
+document.getElementById('prevBtn').addEventListener('click', () => { if (currentStep > 1) { currentStep--; updateUI(); } });
+
+// --- RUPEE BHAI LOGIC ---
+const RupeeBhai = {
+    chatContainer: null,
+    marketCondition: "Neutral",
+    
+    init: function(data) {
+        this.chatContainer = document.getElementById('rupee-bhai-chat');
+        this.chatContainer.innerHTML = ''; // Clear chat
+        
+        // 1. Fixed Market Sentiment (No Randomness)
+        this.marketCondition = "Live Simulation"; 
+        document.getElementById('market-status').innerText = `Market: ${this.marketCondition}`;
+        
+        // 2. Initial Analysis
+        setTimeout(() => this.addBotMessage(`Namaste! I am Rupee Bhai. I've analyzed your financial DNA.`), 500);
+        setTimeout(() => this.generateAnalysis(data), 1500);
+    },
+
+    addBotMessage: function(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-message bot-msg';
+        msgDiv.innerText = text;
+        this.chatContainer.appendChild(msgDiv);
+        this.scrollToBottom();
+    },
+
+    addUserMessage: function(text) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'chat-message user-msg';
+        msgDiv.innerText = text;
+        this.chatContainer.appendChild(msgDiv);
+        this.scrollToBottom();
+        
+        // Show typing indicator then reply
+        this.showTyping();
+        setTimeout(() => {
+            this.removeTyping();
+            this.processQuery(text);
+        }, 1500);
+    },
+
+    showTyping: function() {
+        const typingDiv = document.createElement('div');
+        typingDiv.id = 'typing-indicator';
+        typingDiv.className = 'chat-message bot-msg flex gap-1 items-center';
+        typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+        this.chatContainer.appendChild(typingDiv);
+        this.scrollToBottom();
+    },
+
+    removeTyping: function() {
+        const el = document.getElementById('typing-indicator');
+        if(el) el.remove();
+    },
+
+    scrollToBottom: function() {
+        this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+    },
+
+    generateAnalysis: function(data) {
+        let analysis = "";
+        
+        if (data.frictionType === 'debt') {
+            analysis += "🚨 Critical: Your debt burden is suppressing compounding by ~30% in early years. Prioritize clearing high-interest loans immediately.";
+        } else if (data.frictionType === 'creep') {
+            analysis += "⚠️ Warning: Your lifestyle inflation (10%) is eating your future wealth. If unchecked, you'll miss your retirement target by 7 years.";
+        } else if (data.frictionType === 'impulse') {
+            analysis += "📉 Volatility: Impulse spending creates unpredictable dips. I recommend a '24-hour waiting rule' for purchases > ₹5k.";
+        } else {
+            analysis += "✅ Baseline: Your financials look healthy. Now focus on asset allocation to beat inflation.";
+        }
+
+        // Removed market context randomness checks since it's now stable
+        analysis += "\n\nEnvironment: The simulation assumes standard historical volatility. Focus on long-term rupee cost averaging.";
+
+        this.addBotMessage(analysis);
+        this.addBotMessage("You can ask me about: SIPs, Gold, Debt Management, or Crypto.");
+    },
+
+    processQuery: function(text) {
+        text = text.toLowerCase();
+        let response = "I'm still learning intricacies of that. Try asking about SIP, Gold, or basic financial hygiene.";
+
+        if (text.includes("sip") || text.includes("mutual fund")) {
+            response = "SIPs are your best friend for rupee-cost averaging. In a " + this.marketCondition + ", consistent investing beats timing the market.";
+        } else if (text.includes("gold")) {
+            response = "Gold acts as a hedge against volatility. Consider Sovereign Gold Bonds (SGBs) for 2.5% extra interest over physical gold.";
+        } else if (text.includes("crypto") || text.includes("bitcoin")) {
+            response = "Crypto is highly volatile. If you must, limit it to <5% of your portfolio as 'play money'. Never use your emergency fund for it.";
+        } else if (text.includes("debt") || text.includes("loan")) {
+            response = "Use the 'Avalanche Method' (highest interest first) or 'Snowball Method' (smallest loan first). Just kill the debt before investing heavily.";
+        } else if (text.includes("stock") || text.includes("market")) {
+            response = "We are simulating a standard market cycle. Stick to your fundamentals and don't chase overvalued stocks.";
+        } else if (text.includes("thank") || text.includes("hello") || text.includes("hi")) {
+            response = "You're welcome! Let's keep your financial twin healthy.";
+        }
+
+        this.addBotMessage(response);
+    }
+};
+
+// --- SIMULATION & CHAOS ENGINE ---
+function startSimulation() {
+    switchView('setup-view', 'dashboard-view', runSimulation);
+}
+
+function runSimulation() {
+    // 1. Gather Inputs
+    const currentAge = parseInt(document.getElementById('input-age').value);
+    const retirementAge = parseInt(document.getElementById('input-retire').value);
+    const salary = parseInt(document.getElementById('input-salary').value);
+    const bonus = parseInt(document.getElementById('input-bonus').value);
+    const monthlyRent = parseInt(document.getElementById('input-rent').value);
+    const monthlyLifestyle = parseInt(document.getElementById('input-lifestyle').value);
+    const expenses = (monthlyRent + monthlyLifestyle) * 12;
+    let corpus = parseInt(document.getElementById('input-assets').value);
+    const frictionType = document.querySelector('input[name="mismanagement"]:checked').value;
+    
+    // Financial Summary Calculations
+    const monthlyTotalExpense = monthlyRent + monthlyLifestyle;
+    const monthlySurplus = salary - monthlyTotalExpense;
+    const savingsRate = Math.round((monthlySurplus / salary) * 100);
+    const runwayMonths = Math.round(corpus / monthlyTotalExpense);
+    let runwayDisplay = runwayMonths + " Months";
+    if (runwayMonths > 24) runwayDisplay = (runwayMonths / 12).toFixed(1) + " Years";
 

@@ -279,5 +279,48 @@
                         <p id="stat-safety" class="text-lg text-emerald-400 font-mono font-bold mt-1">--</p>
                     </div>
                 </div>
+<div class="glass-panel rupee-bhai-panel rounded-3xl flex-1 flex flex-col min-h-0 overflow-hidden relative">
+                    <div class="p-4 border-b border-blue-500/20 bg-blue-900/10 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Rupee Bhai AI</span>
+                        </div>
+                        <span id="market-status" class="text-[10px] text-slate-400 font-mono border border-slate-700 px-2 py-0.5 rounded">Simulating Market...</span>
+                    </div>
 
+                    <div id="rupee-bhai-chat" class="flex-1 overflow-y-auto p-4 space-y-3 scrollbar-thin scrollbar-thumb-blue-900 scrollbar-track-transparent">
+                        </div>
+
+                    <div class="p-3 border-t border-white/5 bg-black/20">
+                        <form id="chatForm" class="flex gap-2">
+                            <input type="text" id="chatInput" placeholder="Ask Rupee Bhai (e.g. 'Should I buy gold?')" 
+                                class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-blue-500/50 transition-all placeholder:text-slate-600">
+                            <button type="submit" class="bg-blue-600/80 hover:bg-blue-500 text-white rounded-xl px-4 py-2 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="glass-panel rounded-3xl p-3 h-32 flex flex-col">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-slate-500 text-[10px] uppercase font-bold">Chaos Events</h3>
+                        <span class="text-[8px] text-slate-600">LOG</span>
+                    </div>
+                    <div id="chaos-log" class="flex-1 overflow-y-auto space-y-2 pr-1 font-mono text-[10px]">
+                        </div>
+                </div>
+
+                <div class="quote-card rounded-2xl p-4">
+                    <p class="text-[10px] text-teal-400 uppercase font-bold tracking-widest mb-2">Quote of the Day</p>
+                    <p id="daily-quote" class="text-xs text-slate-300 italic font-medium">"..."</p>
+                    <p id="quote-author" class="text-[10px] text-slate-500 mt-2 text-right font-mono tracking-wide">- ...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="final.js"></script>
+</body>
+</html>
 

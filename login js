@@ -341,5 +341,51 @@ function runSimulation() {
         div.innerHTML = `<span class="font-bold text-white">Age ${log.age}:</span> ${log.msg}`;
         logContainer.appendChild(div);
     });
+// 4. Initialize Rupee Bhai
+    RupeeBhai.init({ frictionType, score });
+
+    // 5. Update Quote of the Day
+    const quotes = [
+        { text: "Beware of little expenses. A small leak will sink a great ship.", author: "Benjamin Franklin" },
+        { text: "It's not how much money you make, but how much money you keep.", author: "Robert Kiyosaki" },
+        { text: "The stock market is designed to transfer money from the Active to the Patient.", author: "Warren Buffett" },
+        { text: "Financial freedom is available to those who learn about it and work for it.", author: "Robert Kiyosaki" },
+        { text: "Do not save what is left after spending, but spend what is left after saving.", author: "Warren Buffett" },
+        { text: "Compound interest is the eighth wonder of the world. He who understands it, earns it... he who doesn't... pays it.", author: "Albert Einstein" }
+    ];
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
+    document.getElementById('daily-quote').innerText = `"${q.text}"`;
+    document.getElementById('quote-author').innerText = `- ${q.author}`;
+
+    // 6. Render Chart
+    const ctxChart = document.getElementById('simChart').getContext('2d');
+    if(window.myChart) window.myChart.destroy();
+    window.myChart = new Chart(ctxChart, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                { label: 'Linear Trajectory', data: linearData, borderColor: '#475569', borderWidth: 2, borderDash: [5, 5], pointRadius: 0, tension: 0.4 },
+                { label: 'Digital Twin (Chaos)', data: chaosData, borderColor: '#2dd4bf', backgroundColor: 'rgba(45, 212, 191, 0.1)', borderWidth: 3, fill: true, pointRadius: 0, tension: 0.4 }
+            ]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false, interaction: { intersect: false, mode: 'index' },
+            plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(15, 23, 42, 0.9)', titleColor: '#2dd4bf', bodyFont: { family: 'JetBrains Mono' }, callbacks: { label: function(context) { return context.dataset.label + ": " + formatter.format(context.raw); } } } },
+            scales: { x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } }, y: { display: false } }
+        }
+    });
+}
+
+// Chat Form Listener
+document.getElementById('chatForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if(text) {
+        RupeeBhai.addUserMessage(text);
+        input.value = '';
+    }
+});
 
 

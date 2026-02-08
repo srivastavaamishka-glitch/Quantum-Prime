@@ -59,5 +59,47 @@ body {
     0%, 100% { filter: drop-shadow(0 0 2px var(--accent-teal)); opacity: 0.7; }
     50% { filter: drop-shadow(0 0 12px var(--accent-teal)); opacity: 1; }
 }
+.btn-scan { position: relative; overflow: hidden; }
+.btn-scan::after {
+    content: "";
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(0deg, transparent, rgba(45, 212, 191, 0.1), transparent);
+    transform: rotate(45deg);
+    transition: 0.5s;
+    pointer-events: none;
+}
+.btn-scan:hover::after { left: 100%; top: 100%; }
+
+.required-indicator { color: var(--accent-teal); margin-left: 4px; }
+
+.custom-checkbox {
+    appearance: none;
+    width: 16px; height: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 4px; background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    position: relative; transition: all 0.3s;
+}
+.custom-checkbox:checked { background: var(--accent-teal); border-color: var(--accent-teal); }
+.custom-checkbox:checked::after {
+    content: '✓';
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); color: black; font-size: 10px; font-weight: bold;
+}
+
+/* --- SETUP/CALIBRATION SPECIFIC STYLES --- */
+.holo-input {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+.holo-input:focus {
+    background: rgba(45, 212, 191, 0.05);
+    border-color: var(--accent-teal);
+    box-shadow: 0 0 15px rgba(45, 212, 191, 0.1);
+    outline: none;
+}
 
 

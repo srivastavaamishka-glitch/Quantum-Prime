@@ -231,4 +231,115 @@ function runSimulation() {
     const runwayMonths = Math.round(corpus / monthlyTotalExpense);
     let runwayDisplay = runwayMonths + " Months";
     if (runwayMonths > 24) runwayDisplay = (runwayMonths / 12).toFixed(1) + " Years";
+// Update Summary UI
+    const surplusEl = document.getElementById('stat-surplus');
+    surplusEl.innerText = "₹" + monthlySurplus.toLocaleString('en-IN');
+    surplusEl.className = `text-lg font-mono font-bold ${monthlySurplus > 0 ? 'text-emerald-400' : 'text-red-400'}`;
+
+    const savingsEl = document.getElementById('stat-savings-rate');
+    savingsEl.innerText = savingsRate + "%";
+    savingsEl.className = `text-lg font-mono font-bold ${savingsRate > 20 ? 'text-emerald-400' : (savingsRate > 0 ? 'text-yellow-400' : 'text-red-400')}`;
+
+    const runwayEl = document.getElementById('stat-runway');
+    runwayEl.innerText = runwayDisplay;
+    runwayEl.className = `text-lg font-mono font-bold ${runwayMonths > 6 ? 'text-emerald-400' : 'text-red-400'}`;
+
+    
+    const salaryGrowth = 0.10; // 10% annual
+    let inflation = 0.07; // 7% annual
+    const marketReturn = 0.12; // 12% annual
+    const years = 80 - currentAge; // Sim until 80
+    
+    let linearCorpus = corpus;
+    let linearData = [];
+    let chaosData = [];
+    let chaosLog = [];
+    let labels = [];
+
+    let annualIncome = (salary * 12) + bonus;
+    let annualExpense = expenses;
+    
+    // Chaos Twin Setup
+    let twinCorpus = corpus;
+    let twinIncome = annualIncome;
+    let twinExpense = annualExpense;
+
+    for (let i = 0; i <= years; i++) {
+        let age = currentAge + i;
+        labels.push(age);
+        
+        // --- Linear Projection ---
+        if (age < retirementAge) {
+            let savings = Math.max(0, annualIncome - annualExpense);
+            linearCorpus = (linearCorpus + savings) * (1 + marketReturn);
+            annualIncome *= (1 + salaryGrowth);
+            annualExpense *= (1 + 0.07);
+        } else {
+            linearCorpus = (linearCorpus - annualExpense) * (1 + (marketReturn - 0.02)); 
+            annualExpense *= (1 + 0.07);
+        }
+        linearData.push(linearCorpus);
+
+        // --- Chaos Engine ---
+        let chaosReturn = marketReturn;
+        let chaosEvent = null;
+        const rand = Math.random();
+
+        // Apply Friction Logic
+        let currentInflation = inflation;
+        let currentSavingsRatio = 1.0;
+        
+        if (frictionType === 'creep') currentInflation = 0.10;
+        if (frictionType === 'debt' && i < 5) currentSavingsRatio = 0.7;
+        if (frictionType === 'impulse' && rand > 0.7) twinExpense *= 1.15;
+
+        if (age < retirementAge) {
+            if (rand < 0.05) { 
+                chaosReturn = -0.15;
+                chaosEvent = { age, type: 'neg', msg: "Market Crash (-15%)" };
+            } else if (rand < 0.08) { 
+                twinExpense += 500000;
+                chaosEvent = { age, type: 'neg', msg: "Medical Emergency (-5L)" };
+            } else if (rand > 0.95) { 
+                twinCorpus += 1000000;
+                chaosEvent = { age, type: 'pos', msg: "Stock Option Windfall (+10L)" };
+            }
+
+            let savings = Math.max(0, twinIncome - twinExpense);
+            savings *= currentSavingsRatio;
+
+            twinCorpus = (twinCorpus + savings) * (1 + chaosReturn);
+            twinIncome *= (1 + salaryGrowth);
+            twinExpense *= (1 + currentInflation);
+        } else {
+            twinCorpus = (twinCorpus - twinExpense) * (1 + (marketReturn - 0.04)); 
+            twinExpense *= (1 + currentInflation);
+        }
+        
+        if (chaosEvent) chaosLog.push(chaosEvent);
+        chaosData.push(Math.max(0, twinCorpus));
+    }
+
+    // 2. Render UI Stats
+    const formatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumSignificantDigits: 3 });
+    document.getElementById('stat-final-nw').innerText = formatter.format(linearData[linearData.length-1] / 10000000) + " Cr";
+    
+    const nwAt60Index = retirementAge - currentAge;
+    const nwAt60 = linearData[nwAt60Index] || 0;
+    document.getElementById('stat-nw-60').innerText = formatter.format(nwAt60 / 10000000) + " Cr";
+    
+    const coverageRatio = linearData[nwAt60Index] / (annualExpense * 20); 
+    const score = Math.min(100, Math.round(coverageRatio * 100));
+    document.getElementById('stat-safety').innerText = score + "/100";
+
+    // 3. Render Chaos Log
+    const logContainer = document.getElementById('chaos-log');
+    logContainer.innerHTML = '';
+    chaosLog.forEach(log => {
+        const div = document.createElement('div');
+        div.className = `chaos-log-item p-2 text-slate-400 ${log.type === 'neg' ? 'chaos-negative' : 'chaos-positive'}`;
+        div.innerHTML = `<span class="font-bold text-white">Age ${log.age}:</span> ${log.msg}`;
+        logContainer.appendChild(div);
+    });
+
 

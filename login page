@@ -133,5 +133,86 @@
                 </div>
             </div>
         </nav>
+<div class="mb-12 relative px-4">
+            <div class="step-line"></div>
+            <div class="step-active-line" style="width: 0%"></div>
+            <div class="flex justify-between relative">
+                <div class="flex flex-col items-center gap-2"><div class="step-dot active" data-step="1"></div><span class="text-[10px] uppercase tracking-wider text-teal-400">Core ID</span></div>
+                <div class="flex flex-col items-center gap-2"><div class="step-dot" data-step="2"></div><span class="text-[10px] uppercase tracking-wider text-slate-500">Inflow</span></div>
+                <div class="flex flex-col items-center gap-2"><div class="step-dot" data-step="3"></div><span class="text-[10px] uppercase tracking-wider text-slate-500">Outflow</span></div>
+                <div class="flex flex-col items-center gap-2"><div class="step-dot" data-step="4"></div><span class="text-[10px] uppercase tracking-wider text-slate-500">Assets</span></div>
+                <div class="flex flex-col items-center gap-2"><div class="step-dot" data-step="5"></div><span class="text-[10px] uppercase tracking-wider text-slate-500">Friction</span></div>
+            </div>
+        </div>
+
+        <form id="calibrationForm" class="glass-panel rounded-3xl p-8 md:p-12 relative overflow-hidden min-h-[500px]">
+            
+            <div id="step-1" class="section-active space-y-8">
+                <div class="mb-8"><h2 class="text-3xl font-bold text-white mb-2">Initialize Core Identity</h2><p class="text-slate-400">Establish baseline temporal parameters.</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Current Age</label><input id="input-age" type="number" value="25" min="18" max="60" class="holo-input w-full p-4 rounded-xl text-white text-xl font-mono"></div>
+                    <div class="space-y-2"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Retirement Target</label><div class="flex items-center gap-4"><input id="input-retire" type="range" min="30" max="65" value="50" class="flex-1" oninput="this.nextElementSibling.innerText = this.value"><span class="text-white font-mono text-xl w-12 text-center bg-white/5 rounded p-1">50</span></div></div>
+                </div>
+            </div>
+
+            <div id="step-2" class="section-hidden hidden space-y-8">
+                <div class="mb-8"><h2 class="text-3xl font-bold text-white mb-2">Income Streams</h2><p class="text-slate-400">Map active cash flow sources.</p></div>
+                <div class="space-y-4"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Monthly In-hand Salary</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono">₹</span><input id="input-salary" type="number" value="85000" class="holo-input w-full p-4 pl-10 rounded-xl text-white text-xl font-mono"></div></div>
+                <div class="space-y-4"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Annual Bonus</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono">₹</span><input id="input-bonus" type="number" value="100000" class="holo-input w-full p-4 pl-10 rounded-xl text-white text-xl font-mono"></div></div>
+            </div>
+
+            <div id="step-3" class="section-hidden hidden space-y-8">
+                <div class="mb-8"><h2 class="text-3xl font-bold text-white mb-2">Burn Rate</h2><p class="text-slate-400">Analyze lifestyle sustainability.</p></div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-2"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Rent & Utilities</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono">₹</span><input id="input-rent" type="number" value="25000" class="holo-input w-full p-4 pl-10 rounded-xl text-white text-xl font-mono"></div></div>
+                    <div class="space-y-2"><label class="text-xs uppercase tracking-widest text-slate-500 font-bold">Lifestyle</label><div class="relative"><span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono">₹</span><input id="input-lifestyle" type="number" value="15000" class="holo-input w-full p-4 pl-10 rounded-xl text-white text-xl font-mono"></div></div>
+                </div>
+            </div>
+
+            <div id="step-4" class="section-hidden hidden space-y-8">
+                <div class="mb-8"><h2 class="text-3xl font-bold text-white mb-2">Existing Corpus</h2><p class="text-slate-400">Input current holdings.</p></div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-2"><label class="text-xs uppercase text-slate-500 font-bold">Investments</label><input id="input-assets" type="number" value="500000" class="holo-input w-full p-3 rounded-xl text-white font-mono"></div>
+                </div>
+            </div>
+
+             <div id="step-5" class="section-hidden hidden space-y-8">
+                <div class="mb-8"><h2 class="text-3xl font-bold text-white mb-2">Friction Points</h2><p class="text-slate-400">Identify active financial leaks to simulate impact.</p></div>
+                <div class="grid grid-cols-1 gap-4">
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mismanagement" value="none" checked class="peer sr-only">
+                        <div class="p-4 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-teal-500/20 peer-checked:border-teal-400 peer-checked:text-teal-400 text-slate-400 transition-all hover:bg-white/10 flex items-center justify-between">
+                            <div><div class="font-bold">Optimized</div><div class="text-[10px] opacity-70">Finances are under control</div></div>
+                            <div class="w-4 h-4 rounded-full border border-white/30 peer-checked:bg-teal-400"></div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mismanagement" value="creep" class="peer sr-only">
+                        <div class="p-4 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-teal-500/20 peer-checked:border-teal-400 peer-checked:text-teal-400 text-slate-400 transition-all hover:bg-white/10 flex items-center justify-between">
+                            <div><div class="font-bold">Lifestyle Creep</div><div class="text-[10px] opacity-70">Expenses rising to match income</div></div>
+                            <div class="w-4 h-4 rounded-full border border-white/30 peer-checked:bg-teal-400"></div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mismanagement" value="debt" class="peer sr-only">
+                        <div class="p-4 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-teal-500/20 peer-checked:border-teal-400 peer-checked:text-teal-400 text-slate-400 transition-all hover:bg-white/10 flex items-center justify-between">
+                            <div><div class="font-bold">Debt Heavy</div><div class="text-[10px] opacity-70">High EMI burden (>40% of income)</div></div>
+                            <div class="w-4 h-4 rounded-full border border-white/30 peer-checked:bg-teal-400"></div>
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input type="radio" name="mismanagement" value="impulse" class="peer sr-only">
+                        <div class="p-4 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-teal-500/20 peer-checked:border-teal-400 peer-checked:text-teal-400 text-slate-400 transition-all hover:bg-white/10 flex items-center justify-between">
+                            <div><div class="font-bold">Impulse Spending</div><div class="text-[10px] opacity-70">Frequent unplanned large purchases</div></div>
+                            <div class="w-4 h-4 rounded-full border border-white/30 peer-checked:bg-teal-400"></div>
+                        </div>
+                    </label>
+                </div>
+                <div class="mt-8 pt-6 border-t border-white/10">
+                     <button type="button" class="w-full py-5 bg-gradient-to-r from-teal-500 to-blue-600 text-white font-bold rounded-xl shadow-xl shadow-teal-500/20 hover:shadow-teal-500/40 transition-all active:scale-[0.98] uppercase tracking-widest text-sm" onclick="startSimulation()">
+                     Generate Digital Twin
+                    </button>
+                </div>
+            </div>
 
 

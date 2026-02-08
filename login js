@@ -1,27 +1,19 @@
-// --- 1. Symmetrical Particle Background ---
+// --- PARTICLE BACKGROUND ---
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let particles = [];
 let width, height;
 
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-}
-
+function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
 class Particle {
     constructor() { this.reset(); }
     reset() {
-        this.x = Math.random() * (width / 2);
-        this.y = Math.random() * height;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.size = Math.random() * 2;
-        this.alpha = Math.random() * 0.3;
+        this.x = Math.random() * (width / 2); this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3;
+        this.size = Math.random() * 2; this.alpha = Math.random() * 0.3;
     }
     update() {
-        this.x += this.vx;
-        this.y += this.vy;
+        this.x += this.vx; this.y += this.vy;
         if (this.x < 0 || this.x > width/2 || this.y < 0 || this.y > height) this.reset();
     }
     draw() {
@@ -30,169 +22,3 @@ class Particle {
         ctx.beginPath(); ctx.arc(width - this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
     }
 }
-
-function initParticles() {
-    particles = [];
-    for(let i=0; i<60; i++) particles.push(new Particle());
-}
-
-function animateParticles() {
-    ctx.clearRect(0, 0, width, height);
-    particles.forEach(p => { p.update(); p.draw(); });
-    requestAnimationFrame(animateParticles);
-}
-
-window.addEventListener('load', () => {
-    resize(); initParticles(); animateParticles();
-
-    // === LOGIN ENTRANCE ANIMATION ===
-    const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-    tl.to("#login-view", { opacity: 1, duration: 1 });
-    tl.to("#logo-l", { x: 0, opacity: 1, duration: 1.5 }, "-=0.5");
-    tl.to("#logo-r", { x: 0, opacity: 1, duration: 1.5 }, "-=1.5");
-    tl.from("#main-title", { y: 30, opacity: 0, duration: 1 }, "-=1");
-    tl.from("#login-view p", { y: 20, opacity: 0, duration: 1 }, "-=0.8");
-    tl.from(".input-container", { x: 20, opacity: 0, stagger: 0.1, duration: 0.8 }, "-=0.8");
-    tl.from("#sim-preview", { scale: 0.9, opacity: 0, duration: 1.2 }, "-=1");
-
-    gsap.to("#progress-bar", {
-        width: "95%", duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut"
-    });
-});
-
-window.addEventListener('resize', resize);
-
-// --- 2. View Switching Logic (Login -> Setup) ---
-document.getElementById('loginForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = document.getElementById('submitBtn');
-    btn.innerHTML = "ESTABLISHING MIRROR...";
-    btn.classList.add('opacity-50');
-    
-    // Create Wipe Element
-    const wipe = document.createElement('div');
-    wipe.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 2px; height: 100%;
-        background: var(--accent-teal); box-shadow: 0 0 40px var(--accent-teal);
-        z-index: 100; pointer-events: none;
-    `;
-    document.body.appendChild(wipe);
-
-    // Wipe Animation
-    gsap.to(wipe, {
-        width: "100%",
-        left: "100%",
-        duration: 1.5,
-        ease: "power4.inOut",
-        onComplete: () => {
-            // 1. Hide Login View
-            document.getElementById('login-view').classList.add('hidden-view');
-            document.querySelector('.axis-line').style.opacity = '0';
-            
-            // 2. Show Setup View
-            const setupView = document.getElementById('setup-view');
-            setupView.classList.remove('hidden-view');
-            
-            // 3. Remove Wipe
-            gsap.to(wipe, { opacity: 0, duration: 0.5, onComplete: () => wipe.remove() });
-
-            // 4. Animate Setup Entrance
-            gsap.to(setupView, { opacity: 1, duration: 0.8 });
-            gsap.from("#setup-view nav", { y: -20, opacity: 0, duration: 1, delay: 0.2 });
-            gsap.from("#setup-view .glass-panel", { y: 30, opacity: 0, duration: 1, delay: 0.4 });
-            
-            // Reset Button text
-            btn.innerHTML = "Initialize Sync";
-            btn.classList.remove('opacity-50');
-        }
-    });
-});
-
-// --- 3. Setup/Calibration Form Logic ---
-let currentStep = 1;
-const totalSteps = 4;
-const nextBtn = document.getElementById('nextBtn');
-const prevBtn = document.getElementById('prevBtn');
-
-function updateUI() {
-    // Update Progress Line
-    const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-    document.querySelector('.step-active-line').style.width = `${progress}%`;
-
-    // Update Dots and Text
-    document.querySelectorAll('.step-dot').forEach(dot => {
-        const step = parseInt(dot.dataset.step);
-        dot.classList.remove('active', 'completed');
-        
-        if (step === currentStep) dot.classList.add('active');
-        if (step < currentStep) dot.classList.add('completed');
-        
-        // Update Text colors
-        const label = dot.nextElementSibling;
-        if(step <= currentStep) {
-            label.classList.remove('text-slate-500');
-            label.classList.add('text-teal-400');
-        } else {
-            label.classList.add('text-slate-500');
-            label.classList.remove('text-teal-400');
-        }
-    });
-
-    // Button Visibility Logic
-    if (currentStep === 1) {
-        prevBtn.classList.add('hidden');
-        prevBtn.classList.remove('flex');
-    } else {
-        prevBtn.classList.remove('hidden');
-        prevBtn.classList.add('flex');
-    }
-
-    // Hide the global "Next" button on the final step (Step 4 has its own "Generate" button)
-    if (currentStep === totalSteps) {
-        nextBtn.classList.add('hidden');
-    } else {
-        nextBtn.classList.remove('hidden');
-    }
-}
-
-// --- 4. Step Transition Animation ---
-function switchStep(direction) {
-    const outgoingStep = document.getElementById(`step-${currentStep}`);
-    const nextStepNum = direction === 'next' ? currentStep + 1 : currentStep - 1;
-    const incomingStep = document.getElementById(`step-${nextStepNum}`);
-
-    // Animate Out
-    gsap.to(outgoingStep, {
-        opacity: 0,
-        x: direction === 'next' ? -50 : 50, // Move left if next, right if prev
-        duration: 0.4,
-        ease: "power2.in",
-        onComplete: () => {
-            outgoingStep.classList.add('hidden');
-            
-            // Prepare Incoming
-            incomingStep.classList.remove('hidden');
-            
-            // Reset position for animation
-            gsap.fromTo(incomingStep, 
-                { opacity: 0, x: direction === 'next' ? 50 : -50 },
-                { opacity: 1, x: 0, duration: 0.4, ease: "power2.out" }
-            );
-
-            currentStep = nextStepNum;
-            updateUI();
-        }
-    });
-}
-
-// Event Listeners
-nextBtn.addEventListener('click', () => {
-    if (currentStep < totalSteps) switchStep('next');
-});
-
-prevBtn.addEventListener('click', () => {
-    if (currentStep > 1) switchStep('prev');
-});
-
-// Initial UI State
-updateUI();
